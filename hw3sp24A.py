@@ -56,33 +56,35 @@ def cholesky_solve(A, b):
 
     return x
 
+def main():
+    # Example matrices and vectors
+    MatA = [[1, -1, 3, 2], [-1, 5, -5, -2], [3, -5, 19, 3], [2, -2, 3, 21]]
+    MatB = [[4, 2, 4, 0], [2, 2, 3, 2], [4, 3, 6, 3], [0, 2, 3, 9]]
+    b = [15, -35, 94, 1]
+    b2 = [20, 36, 60, 122]
+    if is_symmetric_positive_definite(MatA) and is_symmetric_positive_definite(MatB):
+        solution = cholesky_solve(MatA, b)
+        solution2 = cholesky_solve(MatB, b2)
+        method_used = "Cholesky for both"
+        print(f"Used {method_used} systems. System 1: {solution} System 2 {solution2}")
 
-# Example matrices and vectors
-MatA = [[1, -1, 3, 2], [-1, 5, -5, -2], [3, -5, 19, 3], [2, -2, 3, 21]]
-MatB = [[4, 2, 4, 0], [2, 2, 3, 2], [4, 3, 6, 3], [0, 2, 3, 9]]
-b = [15, -35, 94, 1]
-b2 = [20, 36, 60, 122]
-if is_symmetric_positive_definite(MatA) and is_symmetric_positive_definite(MatB):
-    solution = cholesky_solve(MatA, b)
-    solution2 = cholesky_solve(MatB, b2)
-    method_used = "Cholesky for both"
-    print(f"Used {method_used} systems. System 1: {solution} System 2 {solution2}")
+    elif is_symmetric_positive_definite(MatB):
+        solution = cholesky_solve(MatB, b2)
+        solution2 = ds(MatA, b)
+        method_used = "Cholesky for system 2 & Doolittle for system 1"
+        print(f"Used {method_used}: System 2: {solution2} System 1: {solution}")
 
-elif is_symmetric_positive_definite(MatB):
-    solution = cholesky_solve(MatB, b2)
-    solution2 = ds(MatA, b)
-    method_used = "Cholesky for system 2 & Doolittle for system 1"
-    print(f"Used {method_used}: System 2: {solution2} System 1: {solution}")
+    elif is_symmetric_positive_definite(MatA):
+        solution = cholesky_solve(MatA, b)
+        solution2 = ds(MatB, b2)
+        method_used = "Cholesky for system 1 & Doolittle for system 2"
+        print(f"Used {method_used}: System1: {solution} System 2: {solution}")
 
-elif is_symmetric_positive_definite(MatA):
-    solution = cholesky_solve(MatA, b)
-    solution2 = ds(MatB, b2)
-    method_used = "Cholesky for system 1 & Doolittle for system 2"
-    print(f"Used {method_used}: System1: {solution} System 2: {solution}")
+    else:
+        solution = ds(MatA, b)
+        solution2 = ds(MatB, b2)
+        method_used = "Doolittle for both"
+        print(f"Solution using {method_used}: System 1:{solution} System 2: {solution2} ")
 
-else:
-    solution = ds(MatA, b)
-    solution2 = ds(MatB, b2)
-    method_used = "Doolittle for both"
-    print(f"Solution using {method_used}: System 1:{solution} System 2: {solution2} ")
-
+if __name__ == "__main__":
+    main()
